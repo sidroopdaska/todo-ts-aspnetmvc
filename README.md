@@ -26,16 +26,9 @@ To keep the tutorial simple, the app doesn't use a persistent database. Instead,
 
 ## Download the Starter Kit
 
-Download the boilerplate code by cloning the repository located at: TODO
+Download the boilerplate code by cloning the [todo-ts-aspnetmvc-starter](https://github.com/sidroopdaska/todo-ts-aspnetmvc-starter) repository 
 
 (discuss the project structure)
-
-Launch the app as follows:
-* Navigate to the ```Website/``` folder in your terminal and run the following command ```npm start```. This should trigger Webpack which bundles your client side application into a singular bundle. Moreover, this script also invokes Webpack in *watch* mode, i.e. any future changes to your client-side source files will re-trigger the bundling process.
-
-* Open the ```Todo.sln``` in Visual Studio and hit ```Ctrl + F5``` for Windows or Run > Start with Debugging for Mac to launch the website.
-
-You should see TODO
 
 ## Add a model class
 
@@ -67,7 +60,9 @@ Note: The database automatically generates the ```Id``` when a ```TodoItem``` is
  
 The database context is the main class that coordinates Entity Framework functionality for a given data model. This class is created by deriving from the ```Microsoft.EntityFrameworkCore.DbContext``` class.
 
-Add a ```TodoDbContext``` class. Right-click the ```Models``` folder and select **Add > Class**. Name the class ```TodoDbContext``` and select **Add**.
+Add a folder named "Repositories". In Solution Explorer, right-click the project. Select **Add > New Folder**. Name the folder *Repositories*.
+
+Add a ```TodoDbContext``` class. Right-click the ```Repositories``` folder and select **Add > Class**. Name the class ```TodoDbContext``` and select **Add**.
 
 Replace the class with the following code:
 
@@ -89,8 +84,87 @@ namespace Todo.Models
 }
 ```
 
+## Register the Database Context
 
+In this step, the database context is registered with the [dependency injection](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection) container. Services (such as the DB context) that are registered with the dependency injection (DI) container are available to the controllers.
 
+Register the DB context with the service container using the built-in support for dependency injection. Replace the contents of the ```Startup.cs``` file with the following:
+
+```
+using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Todo.Models;
+
+namespace Todo
+{
+    public class Startup
+    {       
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddDbContext<TodoDbContext>(opt => opt.UseInMemoryDatabase("TodoList"));
+            services.AddMvc();
+        }
+
+        public void Configure(IApplicationBuilder app)
+        {
+            app.UseMvc();
+        }
+    }
+}
+```
+
+## Add a controller
+
+A *controller* is an object that handles HTTP requests and creates the HTTP response. This app has a single controller.
+
+Add a folder named "Controllers". In Solution Explorer, right-click the project. Select **Add > New Folder**. Name the folder *Controllers*.
+
+Add a ```TodoController``` class. Right-click the ```Controllers``` folder and select **Add > Web API Controller Class**. Name the class ```TodoController``` and select **Add**.
+
+Replace the class with the following code:
+
+```
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
+using Todo.Models;
+using System.Linq;
+
+namespace Todo.Controllers
+{
+    [Route("api/[controller]")]
+    public class TodoController : Controller
+    {
+        private readonly TodoContext _context;
+
+        public TodoController(TodoContext context)
+        {
+            _context = context;
+
+            if (_context.TodoItems.Count() == 0)
+            {
+                _context.TodoItems.Add(new TodoItem { Name = "Attend the Microsoft Workshop @ SISTEM" });
+                _context.SaveChanges();
+            }
+        }       
+    }
+}
+
+```
+
+The code snippet above:
+* Defines an empty controller class. In the next sections, methods are added to implement the API.
+* The constructor uses Dependency Injection to inject the database context (TodoDbContext) into the controller. The database context is used in each of the CRUD methods in the controller.
+* The constructor adds an item to the in-memory database if one doesn't exist.
+
+## Launch the Website
+
+Launch the app as follows:
+* Navigate to the ```Website/``` folder in your terminal and run the following command ```npm start```. This should trigger Webpack which bundles your client side application into a singular bundle. Moreover, this script also invokes Webpack in *watch* mode, i.e. any future changes to your client-side source files will re-trigger the bundling process.
+
+* Open the ```Todo.sln``` in Visual Studio and hit ```Ctrl + F5``` for Windows or Run > Start with Debugging for Mac to launch the website.
+
+You should see TODO
 
 
 
