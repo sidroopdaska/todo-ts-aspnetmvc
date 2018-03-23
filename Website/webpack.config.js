@@ -2,6 +2,11 @@ const path = require('path');
 const bundleOutputDir = './wwwroot/dist';
 
 module.exports = {
+    stats: {
+        children: false,
+        colors: true,
+        modules: false,
+    },
     entry: {
         index: './src/index.tsx'
     },
@@ -22,11 +27,5 @@ module.exports = {
         path: path.join(__dirname, bundleOutputDir),
         filename: '[name]-bundle.js',
         publicPath: 'dist/'
-    },
-    watch: true,
-    stats: {
-        children: false,
-        colors: true,
-        modules: false,
     }
 };
