@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using TodoService.Repositories;
+using Todo.Repositories;
 
-namespace TodoService
+namespace Todo
 {
     public class Startup
     {

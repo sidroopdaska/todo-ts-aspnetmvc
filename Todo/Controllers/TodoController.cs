@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
-using TodoService.Models;
-using TodoService.Repositories;
+using Todo.Models;
+using Todo.Repositories;
 
-namespace TodoService.Controllers
+namespace Todo.Controllers
 {
     [Route("api/[controller]")]
     public class TodoController: Controller

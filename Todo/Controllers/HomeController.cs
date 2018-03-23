@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace TodoService.Controllers
+namespace Todo.Controllers
 {
     public class HomeController : Controller
     {

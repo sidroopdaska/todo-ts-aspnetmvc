@@ -15,7 +15,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "TodoService": {
+    "Todo": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
