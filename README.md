@@ -11,7 +11,7 @@ This repository implements a Todo SPA using Asp.NET Core + React + Typescript. P
 
 The diagram below shows basic design of the app.
 
-TODO 
+<img src='readme_images/app-arch.PNG' width=500 />  
 
 ## Prerequisites
 
