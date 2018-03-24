@@ -300,6 +300,77 @@ public IActionResult Delete(long id)
 
 { DEMO with Postman }
 
+## Create React app container
+
+Having successfully set up the backend services for our Todo SPA, it's time to move our focus to creating the UI for our web app.
+
+As a first step, we will create a "container" view that will host our React application. This *container* view comprises of a templated HTML layout created using Asp.NET Core Web MVC.
+
+To realise this, we need to perform the following:
+
+### 1. Add an MVC controller
+
+Add a ```HomeController``` class. Right-click the ```Controllers``` folder and select **Add > MVC Controller Class**. Name the class ```HomeController``` and select **Add**.
+
+Add the following code snippet in the generated controller template:
+
+```
+using Microsoft.AspNetCore.Mvc;
+
+namespace Todo.Controllers
+{
+    public class HomeController : Controller
+    {
+        public IActionResult Index()
+        {
+            return View();
+        }
+    }
+}
+```
+
+### 2. Add the corresponding View
+
+After the creation of HomeController > Index (Action) we need to create the corresponding View to support it.
+
+Create a ```Home``` folder under ```Views```. Within the ```Home``` folder, add an ```index.cshtml``` Razor file by right-clicking on the Home folder and selecting **Add > Razor page**
+
+Add the following code snippet to the generated Razor page:
+
+```
+@{
+    ViewData["Title"] = "Todo App";
+}
+
+<div id="react-app">Loading...</div>
+```
+ 
+### 3. Register the routes with the MVC framework
+
+Having now created the container page that gets served when the user navigates to our app, it's time to register our Routes with the MVC framework to ensure the page gets served correctly.
+
+Add the following lines of code to the ```Configure``` method in ```Startup.cs```:
+
+```
+app.UseStaticFiles();
+app.UseMvc(routes =>
+{
+    routes.MapRoute(
+        name: "default",
+        template: "{controller=Home}/{action=Index}/{id?}");
+
+    routes.MapSpaFallbackRoute(
+        name: "spa-fallback",
+        defaults: new { controller = "Home", action = "Index" });
+});
+```
+
+## Launch the app
+
+Launch the app again and this time you should see ```Loading...``` being printed in the browser. This is a result of our server serving the Index.cshtml View we created.
+
+
+
 * Navigate to the ```Website/``` folder in your terminal and run the following command ```npm start```. This should trigger Webpack which bundles your client side application into a singular bundle. Moreover, this script also invokes Webpack in *watch* mode, i.e. any future changes to your client-side source files will re-trigger the bundling process.
 
 * Open the ```Todo.sln``` in Visual Studio and hit ```Ctrl + F5``` for Windows or Run > Start with Debugging for Mac to launch the website.
