@@ -68,8 +68,9 @@ Replace the class with the following code:
 
 ```
 using Microsoft.EntityFrameworkCore;
+using Todo.Models;
 
-namespace Todo.Models
+namespace Todo.Repositories
 {
     public class TodoDbContext : DbContext
     {
@@ -92,26 +93,43 @@ Register the DB context with the service container using the built-in support fo
 
 ```
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Todo.Models;
+using Todo.Repositories;
 
 namespace Todo
 {
-    public class Startup
-    {       
-        public void ConfigureServices(IServiceCollection services)
+	public class Startup
+    {
+        public Startup(IConfiguration configuration)
         {
-            services.AddDbContext<TodoDbContext>(opt => opt.UseInMemoryDatabase("TodoList"));
-            services.AddMvc();
+            Configuration = configuration;
         }
 
-        public void Configure(IApplicationBuilder app)
+        public IConfiguration Configuration { get; }
+
+        // This method gets called by the runtime. Use this method to add services to the container.
+        public void ConfigureServices(IServiceCollection services)
         {
-            app.UseMvc();
+			services.AddDbContext<TodoDbContext>(opt => opt.UseInMemoryDatabase("TodoList"));
+			services.AddMvc();
+        }
+
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+
+			app.UseMvc();
         }
     }
 }
+
 ```
 
 ## Add a controller
