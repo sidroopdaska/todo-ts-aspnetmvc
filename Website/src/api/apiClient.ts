@@ -16,7 +16,7 @@ export class ApiClient {
             baseURL: '/',
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application-json',
+                'Content-Type': 'application/json',
             },
             timeout: 10000
         });
