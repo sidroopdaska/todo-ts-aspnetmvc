@@ -1,15 +1,22 @@
 {
     "compilerOptions": {
-      "baseUrl": ".",
-      "module": "es2015",
+      "rootDir": "./src",
+      "module": "commonjs",
       "moduleResolution": "node",
       "target": "es5",
       "jsx": "react",
+      "importHelpers": true,
+      "lib": [
+        "es6",
+        "dom",
+        "es2017"
+      ],
       "sourceMap": true,
-      "skipDefaultLibCheck": true,
       "strict": true,
-      "types": ["webpack-env"]
     },
+    "typeRoots": [
+      "node_modules/@types"
+    ],
     "exclude": [
         "bin",
         "node_modules"

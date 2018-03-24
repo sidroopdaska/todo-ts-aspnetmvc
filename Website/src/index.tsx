@@ -4,10 +4,4 @@ import App from './app';
 
 let appContainer = document.getElementById('react-app');
 
-let Component = (props: any) => {
-    return (
-        <div>Hello</div>
-    );
-}
-
-ReactDOM.render(<Component />, appContainer);
+ReactDOM.render(<App />, appContainer);
