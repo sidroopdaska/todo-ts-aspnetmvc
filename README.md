@@ -101,7 +101,7 @@ using Todo.Repositories;
 
 namespace Todo
 {
-	public class Startup
+    public class Startup
     {
         public Startup(IConfiguration configuration)
         {
@@ -113,8 +113,8 @@ namespace Todo
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-			services.AddDbContext<TodoDbContext>(opt => opt.UseInMemoryDatabase("TodoList"));
-			services.AddMvc();
+	    services.AddDbContext<TodoDbContext>(opt => opt.UseInMemoryDatabase("TodoList"));
+	    services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -125,11 +125,10 @@ namespace Todo
                 app.UseDeveloperExceptionPage();
             }
 
-			app.UseMvc();
+	    app.UseMvc();
         }
     }
 }
-
 ```
 
 ## Add a controller
@@ -147,15 +146,16 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Todo.Models;
 using System.Linq;
+using Todo.Repositories;
 
 namespace Todo.Controllers
 {
     [Route("api/[controller]")]
     public class TodoController : Controller
     {
-        private readonly TodoContext _context;
+        private readonly TodoDbContext _context;
 
-        public TodoController(TodoContext context)
+        public TodoController(TodoDbContext context)
         {
             _context = context;
 
@@ -211,7 +211,7 @@ Note:
 
 ## Launch the app
 
-In Visual Studio, press Ctrl + F5. Once the app has successful run, navigate to ```http://localhost:3001/api/todo```. You should see the following payload which added to the Database context in the constructor of the TodoController:
+In Visual Studio, press Ctrl + F5. Once the app has successful run, navigate to ```http://localhost:3001/api/todo```. You should see the following payload which was added to the in-memory database in the constructor of the ```TodoController```:
 
 ```
 [
