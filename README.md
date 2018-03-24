@@ -157,14 +157,135 @@ The code snippet above:
 * The constructor uses Dependency Injection to inject the database context (TodoDbContext) into the controller. The database context is used in each of the CRUD methods in the controller.
 * The constructor adds an item to the in-memory database if one doesn't exist.
 
-## Launch the Website
+## Getting the items
 
-Launch the app as follows:
+To get the to-do items, add the following methods to the ```TodoController``` class.
+
+```
+[HttpGet]
+public IEnumerable<TodoItem> GetAll()
+{
+    return _context.TodoItems.ToList();
+}
+
+[HttpGet("{id}", Name = "GetTodo")]
+public IActionResult GetById(long id)
+{
+    var item = _context.TodoItems.FirstOrDefault(t => t.Id == id);
+    if (item == null)
+    {
+        return NotFound();
+    }
+    return new ObjectResult(item);
+}
+```
+
+The above code snippet implements two GET methods:
+* GET /api/todo
+* GET /api/todo/{id}
+
+Note:
+* ```Name = "GetTodo"``` creates a named route. Named routes enable the app to create an HTTP link using the route name.
+* MVC automatically serializes the object to JSON and writes the JSON into the body of the response message.
+
+{ Explain Routing and Return Values}
+{ Demo with Postman }
+
+## Launch the app
+
+In Visual Studio, press Ctrl + F5. Once the app has successful run, navigate to ```http://localhost:3001/api/todo```. You should see the following payload which added to the Database context in the constructor of the TodoController:
+
+```
+[
+  {
+    "id": 1,
+    "name": "Attend Microsoft Workshop ",
+    "isComplete": false
+  }
+]
+```
+
+## Other CRUD methods
+
+In the following sections, ```Create```, ```Update```, and ```Delete``` methods are added to the ```TodoController```.
+
+### Create
+
+Add the following ```Create``` method
+
+```
+[HttpPost]
+public IActionResult Create([FromBody] TodoItem item)
+{
+    if (item == null)
+    {
+        return BadRequest();
+    }
+
+    _context.TodoItems.Add(item);
+    _context.SaveChanges();
+
+    return CreatedAtRoute("GetTodo", new { id = item.Id }, item);
+}
+```
+{ DEMO with Postman }
+
+### Update
+
+Add the following ```Update``` method
+
+```
+[HttpPut("{id}")]
+public IActionResult Update(long id, [FromBody] TodoItem item)
+{
+    if (item == null || item.Id != id)
+    {
+        return BadRequest();
+    }
+
+    var todo = _context.TodoItems.FirstOrDefault(t => t.Id == id);
+    if (todo == null)
+    {
+        return NotFound();
+    }
+
+    todo.IsComplete = item.IsComplete;
+    todo.Name = item.Name;
+
+    _context.TodoItems.Update(todo);
+    _context.SaveChanges();
+    return new NoContentResult();
+}
+```
+
+{ DEMO with Postman }
+
+### Delete
+
+Add the following ```Delete``` method
+
+```
+[HttpDelete("{id}")]
+public IActionResult Delete(long id)
+{
+    var todo = _context.TodoItems.FirstOrDefault(t => t.Id == id);
+    if (todo == null)
+    {
+        return NotFound();
+    }
+
+    _context.TodoItems.Remove(todo);
+    _context.SaveChanges();
+    return new NoContentResult();
+}
+```
+
+{ DEMO with Postman }
+
 * Navigate to the ```Website/``` folder in your terminal and run the following command ```npm start```. This should trigger Webpack which bundles your client side application into a singular bundle. Moreover, this script also invokes Webpack in *watch* mode, i.e. any future changes to your client-side source files will re-trigger the bundling process.
 
 * Open the ```Todo.sln``` in Visual Studio and hit ```Ctrl + F5``` for Windows or Run > Start with Debugging for Mac to launch the website.
 
 You should see TODO
-
 
 
